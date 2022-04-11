@@ -1,7 +1,10 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const Campground = require('./models/campground.js')
+const ejsMate = require('ejs-mate');
+
+const methodOverride = require('method-override');
+const Campground = require('./models/campground.js');
 
 mongoose.connect('mongodb://127.0.0.1:27017/camp', {
     useNewUrlParser: true, 
@@ -16,10 +19,13 @@ db.once("open", ()=>{
 
 const app = express();
 
+app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({extended:true}));
+app.use(methodOverride('_method'));
+
 
 app.get('/', (req, res) =>{
     res.render('home');
@@ -50,6 +56,24 @@ app.get('/campgrounds/:id', async (req, res) =>{
 });
 
 
+app.get('/campgrounds/:id/edit', async (req, res) =>{
+    const campground = await Campground.findById(req.params.id);
+    res.render('campgrounds/edit', {campground});
+});
+
+
+app.put('/campgrounds/:id', async (req, res) =>{
+    const{id} = req.params;
+    await Campground.findByIdAndUpdate(id, {...req.body.campground});
+    res.redirect(`/campgrounds/${id}`);
+});
+
+
+app.delete('/campgrounds/:id', async (req, res) =>{
+    const{id} = req.params;
+    await Campground.findByIdAndDelete(id);
+    res.redirect('/campgrounds');
+});
 
 
 
