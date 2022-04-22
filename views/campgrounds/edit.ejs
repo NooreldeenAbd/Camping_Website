@@ -4,7 +4,7 @@
   <h1 class="text-center">Edit Campground</h1>
   <div class="col-6 offset-3">
   
-    <form action="/campgrounds/<%=campground.id%>?_method=PUT" method="POST" novalidate class="validate-form">
+    <form action="/campgrounds/<%=campground.id%>?_method=PUT" method="POST" novalidate class="validate-form" enctype="multipart/form-data">
 
     <div class="mb-3">
       <label class = "form-label" for="title">Title</label>
@@ -23,13 +23,6 @@
   
   
   <div class="mb-3">
-    <label class = "form-label" for="image">Image URL</label>
-    <input class = "form-control" type="text" id="image" name="campground[image]" value="<%= campground.image %>" required/>
-    <div class="invalid-feedback">Image is needed</div>
-    <div class="valid-feedback">Good!</div>
-  </div>
-  
-  <div class="mb-3">
   <label class = "form-label" for="price">Campground Price</label>
   <div class="input-group">
     <span class="input-group-text" id="price-label">$</span>
@@ -43,19 +36,34 @@
   
   <div class="mb-3">
     <label class = "form-label" for="description">Description</label>
-    <textarea class = "form-control" type="text" id="description" name="campground[description]" required><%= campground.descreption%> </textarea>
+    <textarea class = "form-control" type="text" id="description" name="campground[description]" required><%= campground.description%> </textarea>
     <div class="invalid-feedback">Description is needed</div>
     <div class="valid-feedback">Good!</div>
   </div>
-  
-  
+
+
   <div class="mb-3">
-  <button class="btn btn-info">Update Campground</button>
+    <label for="image" class="form-label">Add Image(s)</label>
+    <input class="form-control" type="file" id="image" name="image" multiple>
   </div>
   
-  </form>
+  <div class="mb-3">
+    <label for="" class="form-label d-block">Select Image(s) to Remove</label>
+
+    <% campground.images.forEach((img, i) =>{ %>
+      <div class="form-check-inline"> 
+        <input type="checkbox" id="image-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
+      </div>
+      <label for="image-<%= i %>"> <img src="<%= img.thumbnail %>" class="img-thumbnail" alt=""> </label>
+    <%}) %> 
+  </div>
   
-  <a href="/campgrounds/<%= campground._id %>">Back To Campground</a>
+  <div class="mb-3">
+    <button class="btn btn-info">Update</button>
+    <a class="btn btn-warning" role="button" href="/campgrounds/<%= campground._id %>">Cancle</a>
+  </div>
+
+  </form>
   
   </div>
   </div>
