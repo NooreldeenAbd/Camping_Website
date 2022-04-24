@@ -9,8 +9,9 @@
             <hr>
             <h4>For Devs:</h4>
             <h5>Error Status: <%= err.statusCode %> </h5>
-            <p> <%= err.stack %> </p>
-
+            <% if (process.env.NODE_ENV != "production"){ %> 
+                <p> <%= err.stack %> </p>
+            <% } %> 
         </div>
     </div>
 </div>

@@ -31,7 +31,7 @@ module.exports.loginForm = (req, res) =>{
 
 module.exports.login = (req, res) =>{
     req.flash('success', 'Welcome Back!');
-    const redirectUrl = req.session.returnTo || '/campgrounds';
+    const redirectUrl = req.session.returnTo || '/';
     delete req.session.returnTo ;
     res.redirect(redirectUrl);
 }
