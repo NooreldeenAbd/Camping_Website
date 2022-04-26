@@ -18,8 +18,10 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const mongoSanatize = require('express-mongo-sanitize');
 
+const MongoStore = require('connect-mongo');
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/camp';
 
-mongoose.connect('mongodb://127.0.0.1:27017/camp', {
+mongoose.connect( dbUrl, {
     useNewUrlParser: true, 
     useUnifiedTopology: true,
 });
@@ -40,10 +42,10 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanatize());
 
-
-const sessionConfig = {
+const secret = process.env.SECRET || 'ThisShouldBeHidden?';
+app.use(session({
     name: 'session',
-    secret: 'ThisShouldBeHidden?',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie:{
@@ -51,9 +53,13 @@ const sessionConfig = {
         //secure: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,  
         maxAge:  1000 * 60 * 60 * 24 * 7
-    }
-};
-app.use(session(sessionConfig));
+    },
+    store: MongoStore.create({
+        touchAfter: 24 * 60 * 60,
+        mongoUrl: dbUrl
+    })
+}));
+
 app.use(flash());
 
 app.use(passport.initialize());
