@@ -1,7 +1,7 @@
 # Camps
 A Website Where someone could post about camp grounds and leave reviews, built with ejs, express, mongoDB, and Bootstrap.
 
-This project is currently in finished, however, it isn't deployed yet. Check back soon for that!
+This project is currently finished, however, it isn't deployed yet. Check back soon for a live demo!
 
 
 # Preview
